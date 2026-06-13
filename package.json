@@ -1,0 +1,19 @@
+{
+  "name": "discord-bot-linker",
+  "version": "1.0.0",
+  "description": "Discord bot for ARK Survival Ascended – links Discord accounts to in-game EOS IDs",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "deploy": "ts-node src/deploy-commands.ts"
+  },
+  "dependencies": {
+    "@types/node": "^20.12.7",
+    "discord.js": "^14.15.2",
+    "mysql2": "^3.9.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
