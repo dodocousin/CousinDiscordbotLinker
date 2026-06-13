@@ -1,6 +1,6 @@
 # CousinDiscordLinker — Full System Documentation
 
-A two-part system for ARK: Survival Ascended that requires players to link their Discord account before they can play on the server. It combines a **C++ server plugin** (CousinDiscordLinker) and a **TypeScript Discord bot** (DiscordBotLinker) that communicate through a shared **MySQL database**.
+A two-part system for ARK: Survival Ascended that requires players to link their Discord account before they can play on the server. It combines a **C++ server plugin** (CousinDiscordLinker) and a **TypeScript Discord bot** (DiscordBotLinker) that communicate through a shared **MySQL database**. You can get the plugin on my web store at : https://store.chezcousin.net for only 9.99$ 
 
 ---
 
@@ -34,96 +34,12 @@ If the player **does not verify within the configured time** and `EnableKick` is
 
 ### What it does
 
-- Hooks `HandleNewPlayer_Implementation` — fires when a player gets a character (login or respawn)
 - Checks if the player's EOS ID is verified in the MySQL `DiscordVerification` table
 - If **not verified**: generates a one-time code, stores it in `DiscordVerificationCodes`, sends an orange in-game notification
 - Sends reminder notifications every `ReminderIntervalSeconds`
 - Checks verification status every `VerifyCheckIntervalSeconds` (always before the kick check)
 - Optionally kicks unverified players after `KickAfterSeconds` (controlled by `EnableKick`)
 
-### Plugin config.json
-
-Located at: `ArkApi/Plugins/CousinDiscordLinker/config.json`
-
-```json
-{
-  "General": {
-    "Debug": false
-  },
-  "DiscordVerification": {
-    "CodeLength": 6,
-    "CodeExpiryMinutes": 30,
-    "ReminderIntervalSeconds": 300,
-    "EnableKick": true,
-    "KickAfterSeconds": 3600,
-    "VerifyCheckIntervalSeconds": 30,
-    "VerificationTableName": "DiscordVerification",
-    "PendingCodesTableName": "DiscordVerificationCodes"
-  },
-  "Messages": {
-    "VerifyPromptMSG": "Your Discord account is not linked! Join our Discord server and type: /verify {}",
-    "KickMSG": "You were kicked: Please link your Discord account to play on this server."
-  },
-  "PluginDBSettings": {
-    "UseMySQL": true,
-    "Host": "localhost",
-    "User": "",
-    "Password": "",
-    "Database": "",
-    "Port": 3306,
-    "MysqlSSLMode": -1,
-    "MysqlTLSVersion": "",
-    "SQLiteDatabasePath": ""
-  }
-}
-```
-
-| Setting | Description |
-|---|---|
-| `Debug` | Enables verbose logging to the server log file |
-| `CodeLength` | Length of the one-time verification code (e.g. `6` = `A3F9K2`) |
-| `CodeExpiryMinutes` | How long a code is valid before a new one is generated |
-| `ReminderIntervalSeconds` | How often to re-send the verify prompt to online unverified players |
-| `EnableKick` | `true` to kick unverified players, `false` to only remind (never kick) |
-| `KickAfterSeconds` | Grace period before an unverified player is kicked. Only applies when `EnableKick` is `true` |
-| `VerifyCheckIntervalSeconds` | How often to query the DB to check if an online player has verified. Always checked **before** the kick |
-| `VerificationTableName` | MySQL table name for player verification records |
-| `PendingCodesTableName` | MySQL table name for pending one-time codes |
-
-### DB Tables (auto-created on plugin load)
-
-**`DiscordVerification`**
-| Column | Type | Description |
-|---|---|---|
-| `Id` | INT | Auto-increment primary key |
-| `EosId` | VARCHAR(100) | Player's EOS ID (unique) |
-| `PlayerName` | VARCHAR(100) | Last known survivor name |
-| `DiscordId` | VARCHAR(50) | Discord user snowflake ID |
-| `DiscordName` | VARCHAR(100) | Discord username |
-| `Verified` | TINYINT | `0` = not linked, `1` = linked |
-| `CreatedAt` | DATETIME | Record creation timestamp |
-| `UpdatedAt` | DATETIME | Last update timestamp |
-
-**`DiscordVerificationCodes`**
-| Column | Type | Description |
-|---|---|---|
-| `Id` | INT | Auto-increment primary key |
-| `EosId` | VARCHAR(100) | Player's EOS ID (unique — one code per player) |
-| `PlayerName` | VARCHAR(100) | Survivor name at time of code generation |
-| `Code` | VARCHAR(20) | The one-time verification code |
-| `ExpiresAt` | BIGINT | Unix timestamp of code expiry |
-
-### Admin Commands (console + RCON)
-
-| Command | Description |
-|---|---|
-| `cdl.verify <eosid>` | Manually mark a player as verified (sets `DiscordId = manual`, `Verified = 1`) |
-| `cdl.unlink <eosid>` | Unlink a player's Discord (resets `Verified = 0`, clears Discord fields) |
-| `CousinDiscordLinker.Reload` | Reload the plugin config without restarting |
-
-> 💡 `CousinDiscordLinker.Reload` can be used to toggle `EnableKick` on/off live without restarting the server.
-
----
 
 ## Part 2 — Discord Bot (DiscordBotLinker)
 
@@ -171,7 +87,8 @@ Edit `DiscordBotLinker/config.json`:
   "allowedChannelIds": ["CHANNEL_ID"],
 
   "allowedAdminRoleIds": ["ADMIN_ROLE_ID_1", "ADMIN_ROLE_ID_2"],
-
+  
+// only if you use the plugin CousinTribeLadder
   "tribeLadderDB": {
     "enabled": false,
     "host": "localhost",
