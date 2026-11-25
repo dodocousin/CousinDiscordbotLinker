@@ -11,6 +11,7 @@ import {
   getPlayerByEosId,
   linkPlayer,
   deleteCode,
+  ensureReferralCode,
 } from '../database';
 import config from '../config';
 
@@ -87,8 +88,31 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
   }
 
   // ── All checks passed – link the account ──────────────────
-  await linkPlayer(codeEntry.EosId, discordId, discordName);
+  const linked = await linkPlayer(codeEntry.EosId, discordId, discordName);
+
+  if (!linked) {
+    // No row existed for this EosId (e.g. plugin record missing/removed).
+    // Do NOT delete the code or tell the player they're linked.
+    console.error(`❌  /verify: linkPlayer affected 0 rows for EosId ${codeEntry.EosId} (code ${code}). No matching row in ${config.database.verificationTable}.`);
+    const embed = new EmbedBuilder()
+      .setColor(Colors.Red)
+      .setTitle('❌ Linking Failed')
+      .setDescription(
+        'Your code was valid, but no matching in-game record could be found or updated.\n\n' +
+        'This is unexpected — please contact a server admin for help.'
+      );
+    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+    return;
+  }
+
   await deleteCode(code);
+
+  // A permanent referral code is created only after the Discord link is valid.
+  const verifiedPlayer = await getPlayerByEosId(codeEntry.EosId);
+  if (verifiedPlayer) {
+    await ensureReferralCode(verifiedPlayer);
+  }
+
 
   const embed = new EmbedBuilder()
     .setColor(Colors.Green)

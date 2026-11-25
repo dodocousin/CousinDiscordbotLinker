@@ -1,0 +1,72 @@
+{
+  "token": "YOUR_BOT_TOKEN",
+  "clientId": "YOUR_APPLICATION_ID",
+  "guildId": "YOUR_DISCORD_SERVER_ID",
+  "allowedChannelIds": [],
+  "allowedAdminRoleIds": [],
+  "tribeLadderDB": {
+    "enabled": false,
+    "host": "localhost",
+    "port": 3306,
+    "user": "your_mysql_user",
+    "password": "your_mysql_password",
+    "database": "your_tribeladder_database_name"
+  },
+  "database": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "your_mysql_user",
+    "password": "your_mysql_password",
+    "database": "your_database_name",
+    "verificationTable": "DiscordVerification",
+    "pendingCodesTable": "DiscordVerificationCodes"
+  },
+  "shopDatabase": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "your_mysql_user",
+    "password": "your_mysql_password",
+    "database": "your_shop_database_name",
+    "table": "shop"
+  },
+  "pointsSystem": {
+    "enabled": false,
+    "pointsPerInterval": 10,
+    "intervalMinutes": 15,
+    "rewardMessage": "You received {points} points for playing and being active in voice chat!"
+  },
+  "arkServers": [
+    {
+      "mapName": "TheIsland",
+      "ip": "127.0.0.1",
+      "port": 27020,
+      "password": "your_rcon_password"
+    }
+  ],
+  "rewardLogWebhook": {
+    "enabled": false,
+    "url": "https://discord.com/api/webhooks/your_webhook_id/your_webhook_token"
+  },
+  "referralSystem": {
+    "enabled": true,
+    "referralCodesTable": "ReferralCodes",
+    "referralsTable": "PlayerReferrals",
+    "rewardsTable": "ReferralRewards",
+    "referralCodeLength": 8,
+    "workerIntervalSeconds": 30,
+    "milestone5Points": 750,
+    "milestone10Points": 1500,
+    "milestone20Points": 3000,
+    "milestone20RoleId": "",
+    "statusChannelId": ""
+  },
+  "characterRestore": {
+    "enabled": false,
+    "managerUrl": "http://localhost:4000",
+    "apiKey": "csm_your_server_manager_api_key",
+    "cooldownMinutes": 60,
+    "adminLogChannelId": ""
+  }
+}
+
+

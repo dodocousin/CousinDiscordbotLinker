@@ -16,6 +16,9 @@ import * as verify   from './commands/verify';
 import * as myInfos  from './commands/myInfos';
 import * as unlink   from './commands/unlink';
 import * as whoIs    from './commands/whoIs';
+import * as referral from './commands/referral';
+import * as referralAdmin from './commands/referralAdmin';
+import * as restorePanel from './commands/restorePanel';
 import config from './config';
 
 if (!config.token)    { console.error('❌ config.json: token is empty');    process.exit(1); }
@@ -27,6 +30,9 @@ const commands: RESTPostAPIApplicationCommandsJSONBody[] = [
   myInfos.data.toJSON(),
   unlink.data.toJSON(),
   whoIs.data.toJSON(),
+  referral.data.toJSON(),
+  referralAdmin.data.toJSON(),
+  restorePanel.data.toJSON(),
 ];
 
 const rest = new REST({ version: '10' }).setToken(config.token);

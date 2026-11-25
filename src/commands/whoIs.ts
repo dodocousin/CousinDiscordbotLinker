@@ -10,6 +10,7 @@ import {
   getPlayerByEosId,
   getPlayerByDiscordId,
   getPlayerByDiscordName,
+  getPlayerByPlayerName,
   getPlayerLadderStats,
   LadderStats,
 } from '../database';
@@ -45,6 +46,16 @@ export const data = new SlashCommandBuilder()
       .addStringOption(opt =>
         opt.setName('id')
           .setDescription('The Discord user\'s snowflake ID')
+          .setRequired(true)
+      )
+  )
+  .addSubcommand(sub =>
+    sub
+      .setName('playername')
+      .setDescription('Look up a player by their exact in-game name')
+      .addStringOption(opt =>
+        opt.setName('name')
+          .setDescription('Exact in-game player name (case-sensitive)')
           .setRequired(true)
       )
   );
@@ -210,6 +221,27 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (player.Verified !== 1) {
       await interaction.reply({
         embeds: [unlinkedEmbed('Discord ID', discordId, { PlayerName: player.PlayerName, EosId: player.EosId })],
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+    const stats = await getPlayerLadderStats(player.EosId);
+    await interaction.reply({ embeds: [linkedEmbed(player, stats)], flags: MessageFlags.Ephemeral });
+    return;
+  }
+
+  // ── /whois playername ─────────────────────────────────────
+  if (subcommand === 'playername') {
+    const name = interaction.options.getString('name', true).trim();
+    const player = await getPlayerByPlayerName(name);
+
+    if (!player) {
+      await interaction.reply({ embeds: [notFoundEmbed('In-Game Name', name)], flags: MessageFlags.Ephemeral });
+      return;
+    }
+    if (player.Verified !== 1) {
+      await interaction.reply({
+        embeds: [unlinkedEmbed('In-Game Name', name, { PlayerName: player.PlayerName, EosId: player.EosId })],
         flags: MessageFlags.Ephemeral,
       });
       return;

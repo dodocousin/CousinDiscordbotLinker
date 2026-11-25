@@ -59,14 +59,10 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
 
   if (stats) {
     embed.addFields(
-      { name: '\u200B', value: '**── Tribe & Stats ──**', inline: false },
-      { name: '🏰 Tribe Name',    value: stats.tribe_name   != null ? String(stats.tribe_name)   : '—', inline: true  },
-      { name: '🆔 Tribe ID',      value: stats.tribe_id     != null ? String(stats.tribe_id)     : '—', inline: true  },
-      { name: '⚔️ Level',         value: stats.player_level != null ? String(stats.player_level) : '—', inline: true  },
-      { name: '🗡️ Player Kills',  value: stats.kills        != null ? String(stats.kills)        : '—', inline: true  },
-      { name: '🦕 Dino Kills',    value: stats.dino_kill    != null ? String(stats.dino_kill)    : '—', inline: true  },
-      { name: '💀 Deaths (PvP)',  value: stats.death        != null ? String(stats.death)        : '—', inline: true  },
-      { name: '☠️ Total Deaths',  value: stats.death_all    != null ? String(stats.death_all)    : '—', inline: true  },
+      { name: '\u200B', value: '**── Stats ──**', inline: false },
+      { name: '☠️ Total Deaths',    value: stats.death_all       != null ? String(stats.death_all)       : '—', inline: true  },
+      { name: 'Wild Dino Kills', value: stats.wild_dino_kills != null ? String(stats.wild_dino_kills) : '—', inline: true  },
+      { name: 'Tames',           value: stats.tames           != null ? String(stats.tames)           : '—', inline: true  },
     );
   }
 
